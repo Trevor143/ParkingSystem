@@ -4,6 +4,8 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.FileOutputStream;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -31,13 +33,20 @@ public class ReportFrame extends javax.swing.JFrame {
       // jLabel1.setText("REPORT : " + ticket.getRandomID());
 //       jTextField1.setText("RECEIPT : " + ticket.getRandomID());
         jTextField1.setText(ticket.getNumberPlate());
+        jTextField1.setEditable(false);
         jTextField2.setText(ticket.getTimeCreated());
+        jTextField2.setEditable(false);
         jTextField3.setText(ticket.getTimeDeparted());
+        jTextField3.setEditable(false);
         jTextField4.setText("Ksh." + Long.toString(ticket.getCost()));
+        jTextField4.setEditable(false);
         
         
       
     }
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -49,6 +58,8 @@ public class ReportFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel5 = new javax.swing.JLabel();
+        jDialog1 = new javax.swing.JDialog();
+        jDialog2 = new javax.swing.JDialog();
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
@@ -63,6 +74,28 @@ public class ReportFrame extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel5.setText("Departure Time");
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
+        jDialog2.getContentPane().setLayout(jDialog2Layout);
+        jDialog2Layout.setHorizontalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog2Layout.setVerticalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,6 +115,11 @@ public class ReportFrame extends javax.swing.JFrame {
         jLabel6.setText("Cost");
 
         getbtn.setText("GET RECEIPT");
+        getbtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                getbtnMouseClicked(evt);
+            }
+        });
         getbtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 getbtnActionPerformed(evt);
@@ -96,6 +134,11 @@ public class ReportFrame extends javax.swing.JFrame {
         });
 
         jTextField2.setText("COST");
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
 
         jTextField3.setText("COST");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
@@ -105,6 +148,11 @@ public class ReportFrame extends javax.swing.JFrame {
         });
 
         jTextField4.setText("COST");
+        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -133,7 +181,7 @@ public class ReportFrame extends javax.swing.JFrame {
                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(173, 173, 173)
+                .addGap(176, 176, 176)
                 .addComponent(getbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
@@ -165,22 +213,51 @@ public class ReportFrame extends javax.swing.JFrame {
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(getbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(getbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+public class PositiveAtomicInteger {
 
+    private AtomicInteger value;
+
+    //plz add additional checks if you always want to start from value>=0
+    public PositiveAtomicInteger(int value) {
+        this.value = new AtomicInteger(value);
+    }
+
+        private PositiveAtomicInteger() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+    public synchronized int incrementAndGet() {
+        int result = value.incrementAndGet();
+        //in case of integer overflow
+        if (result < 0) {
+            value.set(0);
+            return 0;
+        }
+        return result;  
+    }
+    
+}
     private void getbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getbtnActionPerformed
         // TODO add your handling code here:
           Document document = new Document();
+          int b=1;
+          PositiveAtomicInteger m=new PositiveAtomicInteger(b);
+          
+          
 try
 {
-    PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("RECEIPT 4.pdf"));
+    PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("RECEIPT"+m+".pdf"));
     document.open();
 //           document.add(new Paragraph( jLabel7.setText(ticket.getNumberPlate())));
 //    document.addTitle("RECEIPT");
+     
     document.add(new Paragraph("RECEIPT"));
     document.add(new Paragraph("Reg No."));
     document.add(new Paragraph(jTextField1.getText()));
@@ -192,16 +269,10 @@ try
     document.add(new Paragraph(jTextField4.getText()));
     
     document.getPageNumber();
-    
-    
- 
     //Set attributes here
     document.addAuthor("Car Parking System");
-//    document.addCreationDate();
-//    document.addCreator("HowToDoInJava.com");
-//    document.addTitle("Set Attribute Example");
-//    document.addSubject("An example to show how attributes can be added to pdf files.");
  
+    
     document.close();
     writer.close();
 } catch (Exception e)
@@ -212,12 +283,30 @@ try
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
-//        jTextField1.setText("REPORT : " + ticket.getRandomID());
+       jTextField1.setEditable(false);
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
         // TODO add your handling code here:
+        
+     jTextField3.setEditable(false);
     }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        // TODO add your handling code here:
+     jTextField4.setEditable(false);
+    }//GEN-LAST:event_jTextField4ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+     jTextField2.setEditable(false);
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void getbtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_getbtnMouseClicked
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(rootPane, "Please pick your receipt. You have 15 minutes to leave");
+        new ReportFrame( new Ticket() ).setVisible(false);
+    }//GEN-LAST:event_getbtnMouseClicked
 
     /**
      * @param args the command line arguments
@@ -256,6 +345,8 @@ try
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton getbtn;
+    private javax.swing.JDialog jDialog1;
+    private javax.swing.JDialog jDialog2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
