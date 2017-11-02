@@ -304,8 +304,9 @@ try
 
     private void getbtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_getbtnMouseClicked
         // TODO add your handling code here:
+        
         JOptionPane.showMessageDialog(rootPane, "Please pick your receipt. You have 15 minutes to leave");
-        new ReportFrame( new Ticket() ).setVisible(false);
+//        ReportFrame().setVisible(false);
     }//GEN-LAST:event_getbtnMouseClicked
 
     /**
